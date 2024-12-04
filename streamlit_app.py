@@ -9,30 +9,34 @@ from io import BytesIO
 import requests
 import os
 
+st.set_page_config(
+    page_title="KidneyClassify",  
+    page_icon="🩺", 
+    layout="centered",  
+    initial_sidebar_state="auto"
+)
+
 def image_to_base64(image):
-    """Convert image to base64 string."""
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-# URL model (sesuaikan dengan URL model Anda)
+#URL model
 MODEL_URL = "https://raw.githubusercontent.com/jeremyfelix12/KidneyClassify/main/model.h5"
 MODEL_PATH = "median.h5"
 
-# Download model jika belum ada
+#download model
 if not os.path.exists(MODEL_PATH):
     with open(MODEL_PATH, "wb") as file:
         response = requests.get(MODEL_URL)
         file.write(response.content)
-
-# Load model
+#load model
 model = load_model(MODEL_PATH)
 
 class_labels = ['Batu Ginjal', 'Kista', 'Normal', 'Tumor']
 
 # Preprocessing gambar
 def preprocess_image(image, target_size):
-    """Preprocess the uploaded image for prediction."""
     image = image.resize(target_size)
     image = image.convert("L")  
     image_array = np.array(image)
@@ -52,7 +56,7 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     image_resized = image.resize((224, 224)) 
     
-    # CSS untuk menampilkan gambar 
+    # CSS untuk gambar 
     st.markdown(
     f"""
     <div style="
@@ -77,7 +81,7 @@ if uploaded_file is not None:
     unsafe_allow_html=True
 )
 
-    # Preprocess gambar
+    # Preprocess 
     processed_image = preprocess_image(image, target_size=(224, 224))
 
     # Prediksi
