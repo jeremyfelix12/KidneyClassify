@@ -23,7 +23,7 @@ def image_to_base64(image):
 
 #URL model
 MODEL_URL = "https://raw.githubusercontent.com/jeremyfelix12/KidneyClassify/main/model.h5"
-MODEL_PATH = "median.h5"
+MODEL_PATH = "model.h5"
 
 #download model
 if not os.path.exists(MODEL_PATH):
