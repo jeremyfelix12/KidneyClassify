@@ -15,26 +15,13 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
+#fungsi convert gambar untuk ditampilkan
 def image_to_base64(image):
     buffered = BytesIO()
     image.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-#URL model
-MODEL_URL = "https://raw.githubusercontent.com/jeremyfelix12/KidneyClassify/main/model.h5"
-MODEL_PATH = "model.h5"
-
-#download model
-if not os.path.exists(MODEL_PATH):
-    with open(MODEL_PATH, "wb") as file:
-        response = requests.get(MODEL_URL)
-        file.write(response.content)
-#load model
-model = load_model(MODEL_PATH)
-
-class_labels = ['Batu Ginjal', 'Kista', 'Normal', 'Tumor']
-
-# Preprocessing gambar
+# fungsi preprocessing
 def preprocess_image(image, target_size):
     image = image.resize(target_size)
     image = image.convert("L")  
@@ -45,9 +32,24 @@ def preprocess_image(image, target_size):
     image_array = np.expand_dims(image_array, axis=0)
     return image_array
 
+#URL model
+MODEL_URL = "https://raw.githubusercontent.com/jeremyfelix12/KidneyClassify/main/model.h5"
+MODEL_PATH = "model.h5"
+
+#download model
+if not os.path.exists(MODEL_PATH):
+    with open(MODEL_PATH, "wb") as file:
+        response = requests.get(MODEL_URL)
+        file.write(response.content)
+        
+#load model
+model = load_model(MODEL_PATH)
+
+class_labels = ['Batu Ginjal', 'Kista', 'Normal', 'Tumor']
+
 st.title("Klasifikasi Penyakit Ginjal")
 
-# Upload gambar
+#upload gambar
 uploaded_file = st.file_uploader("Silahkan Upload Gambar", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
@@ -80,15 +82,15 @@ if uploaded_file is not None:
     unsafe_allow_html=True
 )
 
-    # Preprocess 
+    #preprocess 
     processed_image = preprocess_image(image, target_size=(224, 224))
 
-    # Prediksi
+    #prediksi
     predictions = model.predict(processed_image)
     predicted_class = class_labels[np.argmax(predictions)]
     confidence = np.max(predictions)
 
-    # CSS untuk hasil prediksi dan confidence
+    #CSS untuk hasil prediksi dan confidence
     st.markdown(
     f"""
     <div style="display: flex; 
