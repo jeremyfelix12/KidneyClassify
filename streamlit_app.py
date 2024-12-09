@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="auto"
 )
 
-#fungsi convert gambar untuk ditampilkan
+#fungsi untuk tampilkan gambar
 def image_to_base64(image):
     buffered = BytesIO()
     image.save(buffered, format="PNG")
